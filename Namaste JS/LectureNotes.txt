@@ -1,0 +1,160 @@
+// Lecture 1 - How JS works & execution context
+
+- Everything in JS happens inside execution context
+- Execution context contains 2 components
+- 1- Memory OR Variable environment contains key value pair of variables and functions
+- 2- Code or Thread of Execuion contains code that execute line by line.
+- Code execute synchronously one line at a time
+- JS is single threaded synchronous language
+- how AJAX supported then ? we'll cover
+
+// Lecture 2 - JS code run , see execution context / call stack in action
+
+- everything happen in JS execution context
+- 2 phases , memore creation and execution phases
+- memory creation phase allocate memory to variables and function and assign undefined placeholder to variables and function body code to functions.
+- you can see it in browser execution context
+- 2nd phase is execution phase. in which code is already executed. and variable will get assign values
+- WHen you invoke a function. function will be executed. a new Local Execution context will be created. it will same have memory and code component and 2 phases.
+- Local execution context will be deleted from memory after function execution completes.
+- at end , global exec context will be deleted as well. Call stack. GEC -> LEC1 -> LEC2
+- Call stack maintains order of execution and return to called place. multiple names of callstack like execution stack etc..
+
+// Lecture 3 - Hoisting in JS. variables and functions + Demo of callstack
+
+- define variable var x=7, function getName(){}. display / call them at end. it will print result as expected
+- what if you access x before declaration var x= 7; it will show you undefined. but execute the function. because in memory we have copy of function. 
+- if we access variable that will not be in code. it will give you reference error.
+- Concept is called hoisting. access variable at top of function.
+- console.log(getName) display function code.
+- function declaration vs function expression behavior is same. function expression will behave like variable. and give undefined.
+- calling function expression give u error before function define.
+- var getName = function(){} is same as var getName = () => {}
+- Call stack demo. simple. see in browser.
+
+// Lecture 4 - How function works in JS - function scope.
+
+- Every function have its own execution stack. memory and execution phase.
+- we cna have same name variables inside each function and global scope.
+- if we access global scope variable in function. and function have same variable name using var. if using let. it will not update global same name variable. example in JS file. 
+- Local execution context have access of local + global scope. 
+
+// Lecture 5 - Shortest JS program
+
+- empty program is shortest program
+- Global execution conext is created
+- WINDOWS object created be default in global space
+- this is also created. this points to WINDOW object 
+- In chrome , there is V8 engine that runs JS. outside browser. its Nodes JS
+- In Node , its different global object. 
+- this === window // true
+- variables / function created in global space will atch and available in window object.
+- var a = 10; window.a or this.a
+
+// Lecture 6 - Undefined vs Not Defined(Reference Error)
+
+- undefined is placeholder for variables in memory creation phase.
+- undefined means variable is available in memory but with no value or special value.
+- not defined mean , variable is never declared and not known to JS engine.
+- if var a; not initialized, undefined will remain forever till end of prgram.
+- we can do a === undefined check as well. 
+- JS is loosely/weakly typed language, not atach specific data type to variables.
+- var a; // undefined , a = 10; // number , a = 'hello' // string. even in arrays.
+- never assign undefined yourself to variable. not good practice. 
+
+// Lecture 7 - Scope chain and lexical environment , Scope and Closures
+
+-  global variable accessible inside a function. 
+- also accessible in nested n level functions.
+- similarly a function variable can be accessible in all of its nested functions.
+- JS search for variable inside local scope then parent scope and its parent and so on till global scope. This is called scope chaining.
+- Scope mean where you can access some variable or function. 
+- 2 perspective = 
+     1- what is scope of variable b ? => where we can access b in code
+     2- is b variable inside scope of function c? => can i access b in c function.
+- scope is dependant on lexical enviornment. 
+- Lexical mean the way the heirarchy your code is writen. like above example. outer variable can be accessible in lexically inside nested all functions.
+- dry run and visualy represent code.
+- Global exec context is at 1st in call stack. then local exec context.
+- lexical enviroment is local scope + parents scope or parent lexical environment. 
+- on local Exec context , you will get local memory space + reference of parent lexical environ.
+- global exec context has no parent , so lexical parent is null.
+- Call stack sequence always not equal to lexically code written.
+- Visually see in browser. We can see Scope of each level function. accessible values.
+- We can also see closure here , can also see 'this' for each context as well. we discuss later on this.
+
+
+// Lecture 8 - Let and Const behavior in scope chain and hoisting - Temporal Dead Zone - Block Scope - Syntax vs reference vs type error
+
+- We had wrong concept that let and const are not hoisted. it is wrong
+- They are hoisted. but very differently. they are in temporal dead zone for the time being till they dclared.
+- We can access var a=10; before this line. as undefined placeholder. 
+- But we cant access let a = 10 before this line. we get refer with different message like 'cannot access a before initialization'.
+- But if we access variable that is not in code. either var or let. we get reference error with ''
+- If we see in browser , we can see let a; present in memory before execution phase. but not under Global space or any function space. Its under some Script> which we can call as temporal deadzone till it is undefined
+- We cant access let, const using Window.b or this.a, because not part of global scope even before or after temporal deadzone.
+- Temporal deadzone. let variable from start of code till line where it is declared.
+- there is case where we just declare variable with let. let a; console it and then initialize it. it will not give error. because its declared and display result as undefined.
+- let, const strict
+- if you redeclare let a = 10; let a = 20; you will get syntax error. even redeclartion is on line 10. but error thrown right away before running 9 lines. becaise its syntax error.
+- same syntax error for same name of let and const in same scope. let a; const a;
+- redeclare same variables with var in same scope is allowed :o 
+- var a = 10; var a; console.log(a); gives you 10. because all var hoist. and if it finds same already available in memory it ignored and not throw error.
+- You cant redeclare let and var same name variable within same scope.
+- const almost same as let.  but you must initialize when declare. rest is same concept.
+- const 2 errors
+    1- if you not initialize it -> Syntax error missing initializer in const declaration
+    2- intialize it and reassign it later -> type error assignment to const variable.
+- 1-Type Error VS 2-Syntax Error VS 3-Reference Error
+    1- if you dont intialize const variable.
+    2- if you wrongly write keyword, or declare let twice
+    3- if variable is not found in memory of current scope or in temporal deadzone.
+- When to use const , let , var. Use const as much as possible. Use let then if value wants to change later. use var very less now. 
+- To avoid temporal deadzone errors -> push declaration and initialization at top of code or function. shrink temporal deadzone to 0 lines.
+
+
+// Lecture 9 - Block Scope and Shadowing in JS
+
+- What is block in JS. its just anything inside {}. we can use only {console.log('hello')} its same as IIFE i think
+- like we use in if(){statement1, statement2 ....} we have separate block for if 
+- lets see how let, var, const behaves in empty braces 
+{
+    var a= 10;
+    let b = 20;
+    const c = 30;
+}
+- a is undefined under block scope. b and c are under Block > in browser. and b and c cant be accesible outside the block and give reference error if we try to access them outside the block before or after 
+- { var a = 10 } is different from function scope
+-  SHadowing in JS = If we have same variable name in global and block scope. local scope same name variable will shadow it and its value will be printed. 
+- var a = 10; {var a = 100; console.log(a)// 100} , it is applicable for let as well. but internal let will vanish after scope and outside let variable with same name will be refered. as far is variable is accessed after declaration.
+- catch is.. if you access same a variable outside the block. it will give you 100. suprised ? because a points to same memory reference in case of block scope. 
+- But that is not case for function scope. because for function separate execution context is created with local variables. 
+- let b; at global is in Script> in browser. let b; in block scope is in Block> thats why refer to 2 different memory spaces.
+- const behaves same as let.
+- illegal Shadowing. let a=20; , {var a=20} valid for blocks only. not functions. like { }, or if{}
+- illegal because var boundary can be inside function. not {}. thats why cannot shadow using var inside block.
+- Block scope also follow lexical scope. example is 
+ const a = 10;
+ {
+    const a = 100;
+    {
+        const a = 200;
+        console.log(a); // 200
+    }
+    console.log(a); // 100
+ }
+ console.log(a); // 10
+- It also follow scope chain pattern as well
+- Block scope in browser made inside scope {}, Script> made when let in global. 
+
+ // Questions Answers Video
+
+ - Common questions asked from akshay
+
+// Lecture 10 - Closure. 
+
+- Video watched - do practice
+
+// Lecture 11 - setTimeout + Closure
+
+- Video watched - do practice
